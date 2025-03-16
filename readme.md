@@ -15,6 +15,11 @@ To fix this, I will use **Wi-Fi**, which has a much greater range than Bluetooth
 
 This way, I can move freely while keeping my phone connected to the audio system.
 
+The phone will be the server and the laptop will be the client.
+There are two directories, one for the server and one for the client.
+More information on them is found in the readme files found in the
+directories.
+
 ## Features (Planned)
 - **Stream music over Wi-Fi** instead of Bluetooth.  
 - **Support multiple speakers** via multiple laptops.  
