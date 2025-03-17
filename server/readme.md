@@ -1,7 +1,7 @@
 # Server Side (Phone Side)
 This is the part of the code that will be running on the phone.
 
-This will do the following:
+## Responsibilities
 + Read the music file.
 + Send the contents over to the client (laptop) over Wi-Fi.
 + Close when all the data is sent.
@@ -47,4 +47,3 @@ This code will be cross-compiled on a Linux machine and then transferred to the 
 ## Planned Features
 + Ability to pause the audio.
 + Change the song being played.
-

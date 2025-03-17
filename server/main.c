@@ -15,6 +15,7 @@ What this code does:
 #include <netdb.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 
 // Global constants.
@@ -25,7 +26,9 @@ What this code does:
 int main() {
 	// Declaring variables.
 	struct addrinfo hints, *res;
-	int status, sockfd;
+	struct sockaddr_in client_addr;
+	int status, sockfd, client_sockfd;
+	socklen_t client_add_size;
 
 	// Setting up hints.
 	memset(&hints, 0, sizeof(hints));
@@ -44,12 +47,39 @@ int main() {
 	sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
 	if (sockfd == -1) {
 		perror("socket() error");
+		freeaddrinfo(res);
 		exit(EXIT_FAILURE);
 	}
+
+	// Binding to the local IP.
+	status = bind(sockfd, res->ai_addr, res->ai_addrlen);
+	freeaddrinfo(res);
+	if (status == -1) {
+		perror("bind() error");
+		exit(EXIT_FAILURE);
+	}
+
+	// Waiting for the client to connect.
+	printf("Waiting for the client to connect.\n");
+	status = listen(sockfd, 1);
+	if (status == -1) {
+		perror("listen() error");
+		exit(EXIT_FAILURE);
+	}
+
+	// Accepting the connection.
+	client_addr_size = sizeof(client_addr);
+	client_sockfd = accept(sockfd, (struct sockaddr*)&client_addr,
+		client_addr_size);
+	if (client_sockfd == -1) {
+		perror("accept() error");
+		exit(EXIT_FAILURE);
+	}
+	printf("Successfully connected to the client.\n");
 
 
 	// Freeing up memory
 
 
-	return 0;
+	exit(EXIT_SUCCESS);
 }
