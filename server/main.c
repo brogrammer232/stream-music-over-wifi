@@ -28,7 +28,7 @@ int main() {
 	struct addrinfo hints, *res;
 	struct sockaddr_in client_addr;
 	int status, sockfd, client_sockfd;
-	socklen_t client_add_size;
+	socklen_t client_addr_size;
 
 	// Setting up hints.
 	memset(&hints, 0, sizeof(hints));
@@ -70,7 +70,7 @@ int main() {
 	// Accepting the connection.
 	client_addr_size = sizeof(client_addr);
 	client_sockfd = accept(sockfd, (struct sockaddr*)&client_addr,
-		client_addr_size);
+		&client_addr_size);
 	if (client_sockfd == -1) {
 		perror("accept() error");
 		exit(EXIT_FAILURE);
