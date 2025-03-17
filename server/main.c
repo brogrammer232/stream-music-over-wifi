@@ -16,6 +16,7 @@ What this code does:
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <unistd.h>
 
 
 // Global constants.
@@ -34,7 +35,7 @@ int main() {
 	memset(&hints, 0, sizeof(hints));
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_STREAM;
-	hints.ai_flags = AI_PASSIVE;
+	hints.ai_flags = AI_PASSIVE | AI_NUMERICSERV;
 
 	// Getting the linked list.
 	status = getaddrinfo(NULL, PORT, &hints, &res);
@@ -56,6 +57,7 @@ int main() {
 	freeaddrinfo(res);
 	if (status == -1) {
 		perror("bind() error");
+		close(sockfd);
 		exit(EXIT_FAILURE);
 	}
 
@@ -80,6 +82,7 @@ int main() {
 
 	// Freeing up memory
 
-
+	close(sockfd);
+	close(client_sockfd);
 	exit(EXIT_SUCCESS);
 }
