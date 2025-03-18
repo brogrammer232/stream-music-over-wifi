@@ -1,7 +1,7 @@
 /*
 This file contains server code. It will run on the phone.
 Compile command:
-	gcc main.c -o main # For running on the computer.
+	gcc main.c -o main -lsndfile # For running on the computer.
 
 What this code does:
 1. Open a socket and connect to the client.
@@ -17,10 +17,15 @@ What this code does:
 #include <string.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <sndfile.h>
 
 
 // Global constants.
 #define PORT "7777"
+#define AUDIO_FILE "song.wav"
+
+
+// Declaring functions.
 
 
 // Main function.
@@ -28,6 +33,8 @@ int main() {
 	// Declaring variables.
 	struct addrinfo hints, *res;
 	struct sockaddr_in client_addr;
+	SNDFILE *file;
+	SF_INFO sf_info;
 	int status, sockfd, client_sockfd;
 	socklen_t client_addr_size;
 
@@ -79,9 +86,11 @@ int main() {
 	}
 	printf("Successfully connected to the client.\n");
 
+	// Opening the audio file.
+	file = sf_open(AUDIO_FILE, SFM_READ, &sf_info);
 
-	// Freeing up memory
 
+	// Freeing up memory and exiting.
 	close(sockfd);
 	close(client_sockfd);
 	exit(EXIT_SUCCESS);
