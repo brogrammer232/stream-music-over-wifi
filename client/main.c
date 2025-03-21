@@ -58,6 +58,8 @@ int main() {
 	}
 	printf("Successfully connected to the server.\n");
 
+	
+	// Freeing memory and exiting.
 	close(sockfd);
 	exit(EXIT_SUCCESS);
 }
