@@ -14,7 +14,7 @@ The server will do the following:
 + Open the audio file using `libsndfile`.
 + Wait for a signal from the client requesting for audio data.
 + Send a chunk of audio data to the client, not the whole file (1024 frames).
-+ Send a signal when all the audio data has been sent.
++ Close the connection and exit.
 
 **Client side:**
 The client will do the following:
@@ -24,6 +24,7 @@ The client will do the following:
 + Store the received audio in a ring buffer.
 + Start audio playback when atleast half of the ring buffer is filled.
 + Refill the buffer when it gets to 50%.
++ Stop playback when all audio has been played.
 
 
 # 2.0.Server side in-depth
@@ -32,6 +33,8 @@ The client will do the following:
 + This function will block code execution until a request is received
 from the client.
 + The request will be a simple string `"SEND DATA"`.
++ This function will be called every time after sending audio chunks
+to the client and there is remaining audio data.
 
 #### Opening and reading the file
 + The `libsndfile` library will be used to open and read the audio file.
@@ -39,3 +42,12 @@ from the client.
 + **Reading function:** `sf_readf_float()`
 + The reading function will be used to read 1024 frames at a time
 because this is the amount of frames that will be sent for every request.
+
+#### Sending data
++ Data will be sent using the `send_data()` function.
++ It will send a total of 1024 frames to the client at a time.
++ It will send less than this if EOF is reached.
++ The data sent will be read using `sf_reaf_float()`.
++ The data will be sent using `send()`.
++ This function will run once every time a request is received from the
+client.
