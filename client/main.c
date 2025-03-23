@@ -15,16 +15,35 @@ What this code does:
 #include <string.h>
 #include <unistd.h>
 
-
 // Global constants.
 #define PORT "7777"
 
+// Declaring functions.
+struct addrinfo *getaddressinfo();
+int connect_server(struct addrinfo *res);
 
 // Main function.
 int main() {
 	// Declaring variables.
+	struct addrinfo *res;
+	int sockfd;
+
+	// Connecting to the server.
+	res = getaddressinfo();
+	sockfd = connect_server(res);	
+
+	// Freeing memory and exiting.
+	close(sockfd);
+	exit(EXIT_SUCCESS);
+}
+
+// Defining functions.
+struct addrinfo *getaddressinfo() {
+	/* This function prepares everything needed to call getaddrinfo()
+	then calls it. It returns a pointer to the linked list created
+	by the function. */
 	struct addrinfo hints, *res;
-	int status, sockfd;
+	int status;
 
 	// Setting up hints.
 	memset(&hints, 0, sizeof(hints));
@@ -38,6 +57,15 @@ int main() {
 		fprintf(stderr, "getaddrinfo() error: %s\n", gai_strerror(status));
 		exit(EXIT_FAILURE);
 	}
+
+	// Returning the linked list.
+	return res;
+}
+
+int connect_server(struct addrinfo *res) {
+	/* This function creates a socket and connects to the server. The
+	server socket file descriptor is returned. */
+	int sockfd, status;
 
 	// Creating a socket.
 	sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
@@ -58,8 +86,6 @@ int main() {
 	}
 	printf("Successfully connected to the server.\n");
 
-	
-	// Freeing memory and exiting.
-	close(sockfd);
-	exit(EXIT_SUCCESS);
+	// Returning the file descriptor.
+	return sockfd;
 }
